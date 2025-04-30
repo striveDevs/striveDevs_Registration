@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registration Form</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f5f5f5;
+      font-family: "Lucida Sans", sans-serif;
+      padding: 20px;
+    }
+    .form-container {
+      width: 350px;
+      background: white;
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      border-radius: 10px;
+      padding: 20px 30px;
+    }
+    .title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 30px;
+    }
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .input {
+      border-radius: 20px;
+      border: 1px solid #c0c0c0;
+      padding: 12px 15px;
+    }
+    .form-btn {
+      padding: 10px 15px;
+      border-radius: 20px;
+      background: linear-gradient(90deg, #ef326f , #fe6c4e);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .page-link {
+      font-size: 12px;
+      color: #747474;
+    }
+    .terms {
+      margin-left: 10px;
+      width: 15px;
+      height: 15px;
+      vertical-align: middle;
+    }
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    .popup-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+    .popup-content p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #333;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <p class="title">Register Now</p>
+    <form class="form" id="registrationForm">
+      <input type="text" class="input" placeholder="Full Name" required>
+      <input type="email" class="input" placeholder="Email" required>
+      <input type="text" class="input" placeholder="Institution (e.g. University of XYZ)" required>
+      <input type="text" class="input" placeholder="Field of Study (e.g. Computer Science, IT)" required>
+      <label class="page-link">
+        <span>Accept terms and conditions</span>
+        <input type="checkbox" class="terms" required>
+      </label>
+      <button class="form-btn" type="submit">Register</button>
+    </form>
+  </div>
+
+  <!-- Success Popup -->
+  <div id="popup" class="popup hidden">
+    <div class="popup-content">
+      <p id="popupMessage"></p>
+      <button class="form-btn" onclick="closePopup()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyRXz6vzEhT5yJwFvfqm5OhdctPI2xQkjsjJic1pVj-FlfG_paS53r5_sqgLjcgqDCovA/exec';
+
+    function generateEntryCode() {
+      return "STRIVE" + Math.floor(1000 + Math.random() * 9000);
+    }
+
+    document.getElementById("registrationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const inputs = document.querySelectorAll('.input');
+      const name = inputs[0].value.trim();
+      const email = inputs[1].value.trim();
+      const institution = inputs[2].value.trim();
+      const field = inputs[3].value.trim();
+
+      const entryCode = generateEntryCode();
+      const data = {
+        name,
+        email,
+        institution,
+        field,
+        entryCode
+      };
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+      })
+      .then(response => {
+        document.getElementById("popupMessage").textContent = `Registration successful! Your entry code is: ${entryCode}`;
+        document.getElementById("popup").classList.remove("hidden");
+        document.getElementById("registrationForm").reset();
+      })
+      .catch(err => alert("Something went wrong: " + err.message));
+    });
+
+    function closePopup() {
+      document.getElementById("popup").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>

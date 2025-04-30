@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      text-align: center;
+      color: #ef326f;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      margin-top: 30px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background-color: #fe6c4e;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  <table id="registrationTable">
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Institution</th>
+        <th>Field</th>
+        <th>Entry Code</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <!-- Data will appear here -->
+    </tbody>
+  </table>
+
+  <script>
+    const tableBody = document.getElementById("tableBody");
+    const registrations = JSON.parse(localStorage.getItem("registrations")) || [];
+
+    registrations.forEach(entry => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${entry.name}</td>
+        <td>${entry.email}</td>
+        <td>${entry.institution}</td>
+        <td>${entry.field}</td>
+        <td>${entry.entryCode}</td>
+        <td>${entry.timestamp}</td>
+      `;
+
+      tableBody.appendChild(row);
+    });
+  </script>
+</body>
+</html>
